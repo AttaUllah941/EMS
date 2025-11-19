@@ -1,0 +1,254 @@
+<div class="project-management-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>
+        <span class="icon">📁</span>
+        Project Management
+      </h1>
+      <p class="subtitle">Manage projects, assign employees, and track project tasks</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-box">
+        <span class="stat-value">{{ projects.length }}</span>
+        <span class="stat-label">Total Projects</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">{{ filteredProjects.length }}</span>
+        <span class="stat-label">Filtered</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="filters-section">
+    <div class="filters-header">
+      <h3>🔍 Filters</h3>
+    </div>
+    <div class="filters-content">
+      <div class="filter-group">
+        <label for="statusFilter">
+          <span class="label-icon">📊</span>
+          Filter by Status
+        </label>
+        <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusFilterChange()" class="filter-select">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="clientFilter">
+          <span class="label-icon">👤</span>
+          Filter by Client
+        </label>
+        <select id="clientFilter" [(ngModel)]="clientFilter" (change)="onClientFilterChange()" class="filter-select">
+          <option value="">All Clients</option>
+          <option *ngFor="let client of clients" [value]="client">{{ client }}</option>
+        </select>
+      </div>
+      
+      <button class="clear-filters-btn" (click)="clearFilters()" *ngIf="statusFilter || clientFilter">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+  
+  <div class="content-section">
+    <div class="project-list-section">
+      <div class="section-header">
+        <h2>
+          <span class="section-icon">📋</span>
+          Projects
+          <span class="count-badge">{{ filteredProjects.length }}</span>
+        </h2>
+      </div>
+      
+      <div *ngIf="filteredProjects.length === 0" class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <p class="empty-message">No projects found matching your filters</p>
+        <button class="empty-action" (click)="clearFilters()" *ngIf="statusFilter || clientFilter">
+          Clear Filters
+        </button>
+      </div>
+      
+      <div class="project-list" *ngIf="filteredProjects.length > 0">
+        <div 
+          *ngFor="let project of filteredProjects" 
+          class="project-card"
+          [class.selected]="selectedProject?.id === project.id"
+          (click)="selectProject(project)">
+          <div class="project-icon">
+            <div class="icon-circle">
+              📁
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="project-header">
+              <h3>{{ project.name }}</h3>
+              <span [class]="'status-badge status-' + project.status.toLowerCase().replace(' ', '-')">
+                {{ project.status }}
+              </span>
+            </div>
+            <div class="project-details">
+              <div class="detail-row">
+                <span class="detail-icon">👤</span>
+                <span class="detail-text">{{ project.client }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">📅</span>
+                <span class="detail-text">{{ project.deadline }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">👥</span>
+                <span class="detail-text">{{ project.employeeIds.length }} employee(s)</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-indicator" *ngIf="selectedProject?.id === project.id">
+            <span class="indicator-dot"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="project-details-section" *ngIf="selectedProject">
+      <div class="details-header">
+        <div class="header-info">
+          <div class="project-icon-large">
+            📁
+          </div>
+          <div class="header-text">
+            <h2>{{ selectedProject.name }}</h2>
+            <p class="project-meta">
+              <span [class]="'status-badge-inline status-' + selectedProject.status.toLowerCase().replace(' ', '-')">
+                {{ selectedProject.status }}
+              </span>
+            </p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="clearSelection()" title="Close">
+          <span>✕</span>
+        </button>
+      </div>
+      
+      <div class="project-info-section">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-icon">👤</span>
+            <div class="info-content">
+              <span class="info-label">Client</span>
+              <span class="info-value">{{ selectedProject.client }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">📅</span>
+            <div class="info-content">
+              <span class="info-label">Deadline</span>
+              <span class="info-value">{{ selectedProject.deadline }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">👥</span>
+            <div class="info-content">
+              <span class="info-label">Team Size</span>
+              <span class="info-value highlight">{{ selectedProject.employeeIds.length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="assigned-employees-section">
+        <div class="section-title">
+          <h3>
+            <span class="section-icon">👥</span>
+            Assigned Employees
+            <span class="count-badge-small">{{ selectedProject.employeeIds.length }}</span>
+          </h3>
+        </div>
+        
+        <div *ngIf="selectedProject.employeeIds.length === 0" class="no-items">
+          <div class="empty-icon-small">👤</div>
+          <p>No employees assigned to this project.</p>
+        </div>
+        
+        <div *ngIf="selectedProject.employeeIds.length > 0" class="employee-list">
+          <div *ngFor="let empId of selectedProject.employeeIds" class="employee-item">
+            <div class="employee-avatar-small">
+              {{ getEmployeeName(empId).charAt(0).toUpperCase() }}
+            </div>
+            <span class="employee-name">{{ getEmployeeName(empId) }}</span>
+            <button class="remove-btn" (click)="removeEmployee(empId)" title="Remove employee">
+              <span>✕</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="assign-section" *ngIf="availableEmployees.length > 0">
+          <h4>
+            <span class="section-icon-small">➕</span>
+            Assign Employee
+          </h4>
+          <div class="assign-controls">
+            <select #employeeSelect class="employee-select">
+              <option value="">Select an employee...</option>
+              <option *ngFor="let emp of availableEmployees" [value]="emp.id">
+                {{ emp.name }} ({{ emp.role }})
+              </option>
+            </select>
+            <button 
+              class="assign-btn" 
+              (click)="assignEmployee(+employeeSelect.value); employeeSelect.value = ''"
+              [disabled]="!employeeSelect.value">
+              <span class="btn-icon">➕</span>
+              Assign
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tasks-section">
+        <div class="section-title">
+          <h3>
+            <span class="section-icon">✅</span>
+            Project Tasks
+            <span class="count-badge-small">{{ selectedProjectTasks.length }}</span>
+          </h3>
+        </div>
+        
+        <div *ngIf="selectedProjectTasks.length === 0" class="no-items">
+          <div class="empty-icon-small">📝</div>
+          <p>No tasks for this project.</p>
+        </div>
+        
+        <div *ngIf="selectedProjectTasks.length > 0" class="tasks-list">
+          <div *ngFor="let task of selectedProjectTasks" class="task-item">
+            <div class="task-header">
+              <h4>{{ task.name }}</h4>
+              <span [class]="'task-status status-' + task.status.toLowerCase().replace(' ', '-')">
+                {{ task.status }}
+              </span>
+            </div>
+            <p class="task-description">{{ task.description }}</p>
+            <div class="task-footer">
+              <div class="task-meta-item">
+                <span class="meta-icon">👤</span>
+                <span class="meta-text">{{ task.assignedEmployeeId ? getEmployeeName(task.assignedEmployeeId) : 'Unassigned' }}</span>
+              </div>
+              <div class="task-meta-item">
+                <span class="meta-icon">📅</span>
+                <span class="meta-text">{{ task.dueDate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="placeholder-section" *ngIf="!selectedProject">
+      <div class="placeholder-content">
+        <div class="placeholder-icon">👆</div>
+        <h3>Select a Project</h3>
+        <p>Click on a project card to view details, assign employees, and manage tasks</p>
+      </div>
+    </div>
+  </div>
+</div>

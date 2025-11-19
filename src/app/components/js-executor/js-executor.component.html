@@ -1,0 +1,81 @@
+<div class="js-executor-container">
+  <h1>JavaScript Executor</h1>
+  <p class="description">Write JavaScript functions in the text areas below. Functions will execute sequentially when you click Execute.</p>
+  
+  <div class="functions-section">
+    <div *ngFor="let func of functions; let i = index" class="function-input-group">
+      <label>Function {{ i + 1 }}:</label>
+      <textarea 
+        [(ngModel)]="functions[i]" 
+        placeholder="Enter JavaScript code here...&#10;Example: return 'Hello World';"
+        rows="8"
+        [disabled]="executing"
+        class="function-input"></textarea>
+    </div>
+  </div>
+  
+  <div class="actions-section">
+    <button 
+      class="execute-btn" 
+      (click)="executeFunctions()" 
+      [disabled]="executing">
+      {{ executing ? 'Executing...' : 'Execute Functions' }}
+    </button>
+    <button 
+      class="clear-results-btn" 
+      (click)="clearResults()" 
+      [disabled]="executing || results.length === 0">
+      Clear Results
+    </button>
+    <button 
+      class="clear-all-btn" 
+      (click)="clearAll()" 
+      [disabled]="executing">
+      Clear All
+    </button>
+  </div>
+  
+  <div class="results-section" *ngIf="results.length > 0">
+    <h2>Execution Results</h2>
+    <div *ngFor="let result of results" class="result-card" [class.success]="result.success" [class.error]="!result.success">
+      <div class="result-header">
+        <h3>Function {{ result.functionNumber }}</h3>
+        <span class="execution-time">{{ result.executionTime }}ms</span>
+      </div>
+      
+      <div class="result-body">
+        <div *ngIf="result.success" class="success-result">
+          <strong>Result:</strong>
+          <pre>{{ result.result }}</pre>
+        </div>
+        
+        <div *ngIf="!result.success" class="error-result">
+          <strong>Error:</strong>
+          <pre>{{ result.error }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="examples-section">
+    <h3>Example Functions:</h3>
+    <div class="example-list">
+      <div class="example-item">
+        <strong>Simple Return:</strong>
+        <code ngNonBindable>return 'Hello World';</code>
+      </div>
+      <div class="example-item">
+        <strong>Async Function:</strong>
+        <code ngNonBindable>await new Promise(resolve => setTimeout(resolve, 1000)); return 'Done';</code>
+      </div>
+      <div class="example-item">
+        <strong>Data Transformation:</strong>
+        <code ngNonBindable>const data = [1, 2, 3, 4, 5]; return data.map(x => x * 2);</code>
+      </div>
+      <div class="example-item">
+        <strong>Complex Calculation:</strong>
+        <code ngNonBindable>const sum = Array.from(&#123;length: 100&#125;, (_, i) => i + 1).reduce((a, b) => a + b, 0); return sum;</code>
+      </div>
+    </div>
+  </div>
+</div>

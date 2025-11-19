@@ -1,0 +1,185 @@
+<div class="employee-management-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>
+        <span class="icon">👥</span>
+        Employee Management
+      </h1>
+      <p class="subtitle">Manage and view employee information and their project assignments</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-box">
+        <span class="stat-value">{{ employees.length }}</span>
+        <span class="stat-label">Total Employees</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">{{ filteredEmployees.length }}</span>
+        <span class="stat-label">Filtered</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="filters-section">
+    <div class="filters-header">
+      <h3>🔍 Filters</h3>
+    </div>
+    <div class="filters-content">
+      <div class="filter-group">
+        <label for="roleFilter">
+          <span class="label-icon">💼</span>
+          Filter by Role
+        </label>
+        <select id="roleFilter" [(ngModel)]="roleFilter" (change)="onRoleFilterChange()" class="filter-select">
+          <option value="">All Roles</option>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="departmentFilter">
+          <span class="label-icon">🏢</span>
+          Filter by Department
+        </label>
+        <select id="departmentFilter" [(ngModel)]="departmentFilter" (change)="onDepartmentFilterChange()" class="filter-select">
+          <option value="">All Departments</option>
+          <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+        </select>
+      </div>
+      
+      <button class="clear-filters-btn" (click)="clearFilters()" *ngIf="roleFilter || departmentFilter">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+  
+  <div class="content-section">
+    <div class="employee-list-section">
+      <div class="section-header">
+        <h2>
+          <span class="section-icon">📋</span>
+          Employees
+          <span class="count-badge">{{ filteredEmployees.length }}</span>
+        </h2>
+      </div>
+      
+      <div *ngIf="filteredEmployees.length === 0" class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <p class="empty-message">No employees found matching your filters</p>
+        <button class="empty-action" (click)="clearFilters()" *ngIf="roleFilter || departmentFilter">
+          Clear Filters
+        </button>
+      </div>
+      
+      <div class="employee-list" *ngIf="filteredEmployees.length > 0">
+        <div 
+          *ngFor="let employee of filteredEmployees" 
+          class="employee-card"
+          [class.selected]="selectedEmployee?.id === employee.id"
+          (click)="selectEmployee(employee)">
+          <div class="card-avatar">
+            <div class="avatar-circle">
+              {{ employee.name.charAt(0).toUpperCase() }}
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="employee-header">
+              <h3>{{ employee.name }}</h3>
+              <span class="project-count-badge">
+                <span class="badge-icon">📁</span>
+                {{ employee.projectIds.length }}
+              </span>
+            </div>
+            <div class="employee-details">
+              <div class="detail-row">
+                <span class="detail-icon">📧</span>
+                <span class="detail-text">{{ employee.email }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">💼</span>
+                <span class="detail-text">{{ employee.role }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon">🏢</span>
+                <span class="detail-text">{{ employee.department }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-indicator" *ngIf="selectedEmployee?.id === employee.id">
+            <span class="indicator-dot"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="employee-details-section" *ngIf="selectedEmployee">
+      <div class="details-header">
+        <div class="header-info">
+          <div class="selected-avatar">
+            {{ selectedEmployee.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="header-text">
+            <h2>{{ selectedEmployee.name }}</h2>
+            <p class="employee-meta">{{ selectedEmployee.role }} • {{ selectedEmployee.department }}</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="clearSelection()" title="Close">
+          <span>✕</span>
+        </button>
+      </div>
+      
+      <div class="employee-info-section">
+        <div class="info-item">
+          <span class="info-label">Email:</span>
+          <span class="info-value">{{ selectedEmployee.email }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Total Projects:</span>
+          <span class="info-value highlight">{{ selectedEmployeeProjects.length }}</span>
+        </div>
+      </div>
+      
+      <div class="projects-section">
+        <h3>
+          <span class="section-icon">📁</span>
+          Assigned Projects
+          <span class="count-badge">{{ selectedEmployeeProjects.length }}</span>
+        </h3>
+        
+        <div *ngIf="selectedEmployeeProjects.length === 0" class="no-projects">
+          <div class="empty-icon-small">📭</div>
+          <p>No projects assigned to this employee.</p>
+        </div>
+        
+        <div *ngIf="selectedEmployeeProjects.length > 0" class="projects-list">
+          <div *ngFor="let project of selectedEmployeeProjects" class="project-card">
+            <div class="project-header">
+              <h4>{{ project.name }}</h4>
+              <span [class]="'status-badge status-' + project.status.toLowerCase().replace(' ', '-')">
+                {{ project.status }}
+              </span>
+            </div>
+            <div class="project-details">
+              <div class="project-detail-item">
+                <span class="detail-label">👤 Client:</span>
+                <span class="detail-value">{{ project.client }}</span>
+              </div>
+              <div class="project-detail-item">
+                <span class="detail-label">📅 Deadline:</span>
+                <span class="detail-value">{{ project.deadline }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="placeholder-section" *ngIf="!selectedEmployee">
+      <div class="placeholder-content">
+        <div class="placeholder-icon">👆</div>
+        <h3>Select an Employee</h3>
+        <p>Click on an employee card to view their assigned projects and details</p>
+      </div>
+    </div>
+  </div>
+</div>
+

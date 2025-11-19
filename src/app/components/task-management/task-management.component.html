@@ -1,0 +1,77 @@
+<div class="task-management-container">
+  <h1>Task Management</h1>
+  
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="statusFilter">Filter by Status:</label>
+      <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusFilterChange()">
+        <option value="">All Statuses</option>
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="employeeFilter">Filter by Employee:</label>
+      <select id="employeeFilter" [(ngModel)]="employeeFilter" (change)="onEmployeeFilterChange()">
+        <option [value]="null">All Employees</option>
+        <option *ngFor="let emp of allEmployees" [value]="emp.id">{{ emp.name }}</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="dueDateFilter">Filter by Due Date:</label>
+      <input 
+        type="date" 
+        id="dueDateFilter" 
+        [(ngModel)]="dueDateFilter" 
+        (change)="onDueDateFilterChange()" />
+    </div>
+    
+    <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+  </div>
+  
+  <div class="tasks-section">
+    <h2>Tasks ({{ filteredTasks.length }})</h2>
+    <div *ngIf="filteredTasks.length === 0" class="no-tasks">
+      <p>No tasks found matching the filters.</p>
+    </div>
+    <div *ngIf="filteredTasks.length > 0" class="tasks-grid">
+      <div *ngFor="let task of filteredTasks" class="task-card">
+        <div class="task-header">
+          <h3>{{ task.name }}</h3>
+          <select 
+            [value]="task.status" 
+            (change)="updateTaskStatus(task.id, $any($event.target).value)"
+            class="status-select">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        
+        <div class="task-body">
+          <p class="task-description">{{ task.description }}</p>
+          
+          <div class="task-details">
+            <div class="detail-item">
+              <strong>Project:</strong> {{ getProjectName(task.projectId) }}
+            </div>
+            <div class="detail-item">
+              <strong>Assigned To:</strong> {{ getEmployeeName(task.assignedEmployeeId) }}
+            </div>
+            <div class="detail-item">
+              <strong>Due Date:</strong> {{ task.dueDate }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="task-footer">
+          <span [class]="'status-badge status-' + task.status.toLowerCase().replace(' ', '-')">
+            {{ task.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
