@@ -1,18 +1,5 @@
 <div class="dashboard-container">
-  <div class="dashboard-header">
-    <div class="header-content">
-      <h1>
-        <span class="header-icon">📊</span>
-        Dashboard Overview
-      </h1>
-      <p class="header-subtitle">Welcome! Here's a comprehensive view of your organization</p>
-    </div>
-    <div class="header-decoration">
-      <div class="decoration-circle circle-1"></div>
-      <div class="decoration-circle circle-2"></div>
-      <div class="decoration-circle circle-3"></div>
-    </div>
-  </div>
+  
   
   <div *ngIf="loading" class="loading-container">
     <div class="loading-spinner">
@@ -21,146 +8,195 @@
     </div>
   </div>
   
-  <div *ngIf="!loading && stats" class="dashboard-content">
-    <!-- Main Stats Cards -->
-    <div class="main-stats-grid">
-      <div class="stat-card stat-card-primary">
-        <div class="stat-icon-wrapper">
-          <div class="stat-icon">👥</div>
+  <div class="dashboard-content">
+    <!-- Summary Cards -->
+    <div class="summary-section">
+      <!-- Total Employees Card -->
+      <div class="summary-card">
+        <div *ngIf="loading || !stats" class="summary-skeleton" [style.animation-delay]="'0s'">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-value"></div>
+            <div class="skeleton-description"></div>
+          </div>
         </div>
-        <div class="stat-content">
-          <h3>Total Employees</h3>
-          <div class="stat-value-large">{{ stats.totalEmployees }}</div>
-          <p class="stat-description">Active team members</p>
+        <div *ngIf="!loading && stats" class="summary-card-content">
+          <div class="summary-icon-wrapper">
+            <div class="summary-icon">👥</div>
+          </div>
+          <div class="summary-content">
+            <h4>Total Employees</h4>
+            <div class="summary-value">{{ stats.totalEmployees }}</div>
+            <p class="summary-description">Active team members</p>
+          </div>
         </div>
-        <div class="stat-decoration"></div>
       </div>
       
-      <div class="stat-card stat-card-secondary">
-        <div class="stat-icon-wrapper">
-          <div class="stat-icon">📁</div>
+      <!-- Total Projects Card -->
+      <div class="summary-card">
+        <div *ngIf="loading || !stats" class="summary-skeleton" [style.animation-delay]="'0.1s'">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-value"></div>
+            <div class="skeleton-description"></div>
+          </div>
         </div>
-        <div class="stat-content">
-          <h3>Total Projects</h3>
-          <div class="stat-value-large">{{ stats.totalProjects }}</div>
-          <p class="stat-description">Active projects</p>
+        <div *ngIf="!loading && stats" class="summary-card-content">
+          <div class="summary-icon-wrapper">
+            <div class="summary-icon">📁</div>
+          </div>
+          <div class="summary-content">
+            <h4>Total Projects</h4>
+            <div class="summary-value">{{ stats.totalProjects }}</div>
+            <p class="summary-description">Active projects</p>
+          </div>
         </div>
-        <div class="stat-decoration"></div>
+      </div>
+
+      <!-- Total Tasks Card -->
+      <div class="summary-card">
+        <div *ngIf="loading || !stats" class="summary-skeleton" [style.animation-delay]="'0.2s'">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-value"></div>
+            <div class="skeleton-description"></div>
+          </div>
+        </div>
+        <div *ngIf="!loading && stats" class="summary-card-content">
+          <div class="summary-icon-wrapper">
+            <div class="summary-icon">✅</div>
+          </div>
+          <div class="summary-content">
+            <h4>Total Tasks</h4>
+            <div class="summary-value">{{ getTotalTasks() }}</div>
+            <p class="summary-description">All tasks</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion Rate Card -->
+      <div class="summary-card">
+        <div *ngIf="loading || !stats" class="summary-skeleton" [style.animation-delay]="'0.3s'">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-value"></div>
+            <div class="skeleton-description"></div>
+          </div>
+        </div>
+        <div *ngIf="!loading && stats" class="summary-card-content">
+          <div class="summary-icon-wrapper">
+            <div class="summary-icon">📊</div>
+          </div>
+          <div class="summary-content">
+            <h4>Completion Rate</h4>
+            <div class="summary-value highlight">{{ getCompletionRate() }}%</div>
+            <p class="summary-description">Tasks completed</p>
+          </div>
+        </div>
       </div>
     </div>
+
+
+    <!-- Individual Charts Grid -->
+    <div *ngIf="!loading && stats" class="charts-grid">
+      <!-- Employees Chart -->
+      <div class="chart-section">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div *ngIf="employeesChartLoading" class="header-skeleton">
+              <div class="skeleton-header-title"></div>
+            </div>
+            <h3 *ngIf="!employeesChartLoading">
+              <span class="chart-icon">👥</span>
+              Employees 
+            </h3>
+          </div>
+          <div class="chart-container">
+            <div *ngIf="employeesChartLoading" class="chart-skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-bars">
+                <div class="skeleton-bar" *ngFor="let i of [1,2,3,4]" [style.animation-delay]="i * 0.1 + 's'"></div>
+              </div>
+            </div>
+            <div #employeesChart class="chart" [class.chart-hidden]="employeesChartLoading"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Chart -->
+      <div class="chart-section">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div *ngIf="projectsChartLoading" class="header-skeleton">
+              <div class="skeleton-header-title"></div>
+            </div>
+            <h3 *ngIf="!projectsChartLoading">
+              <span class="chart-icon">📁</span>
+              Projects 
+            </h3>
+          </div>
+          <div class="chart-container">
+            <div *ngIf="projectsChartLoading" class="chart-skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-bars">
+                <div class="skeleton-bar" *ngFor="let i of [1,2,3]" [style.animation-delay]="i * 0.1 + 's'"></div>
+              </div>
+            </div>
+            <div #projectsChart class="chart" [class.chart-hidden]="projectsChartLoading"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks Chart -->
+      <div class="chart-section">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div *ngIf="tasksChartLoading" class="header-skeleton">
+              <div class="skeleton-header-title"></div>
+            </div>
+            <h3 *ngIf="!tasksChartLoading">
+              <span class="chart-icon">✅</span>
+              Tasks 
+            </h3>
+          </div>
+          <div class="chart-container">
+            <div *ngIf="tasksChartLoading" class="chart-skeleton">
+              <div class="skeleton-header"></div>
+              <div class="skeleton-bars">
+                <div class="skeleton-bar" *ngFor="let i of [1,2,3]" [style.animation-delay]="i * 0.1 + 's'"></div>
+              </div>
+            </div>
+            <div #tasksChart class="chart" [class.chart-hidden]="tasksChartLoading"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Overview Chart -->
+    <div *ngIf="!loading && stats" class="chart-section main-chart-section">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div *ngIf="mainChartLoading" class="header-skeleton">
+            <div class="skeleton-header-subtitle"></div>
+          </div>
+          <h4 *ngIf="!mainChartLoading" class="chart-subtitle">Total count of Employees, Projects, and Tasks</h4>
+        </div>
+        <div class="chart-container">
+          <div *ngIf="mainChartLoading" class="chart-skeleton">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-bars">
+              <div class="skeleton-bar" *ngFor="let i of [1,2,3]" [style.animation-delay]="i * 0.1 + 's'"></div>
+            </div>
+          </div>
+          <div #mainChart class="chart" [class.chart-hidden]="mainChartLoading"></div>
+        </div>
+      </div>
+    </div>
+
     
-    <!-- Tasks by Status Section -->
-    <div class="tasks-section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">✅</span>
-          Tasks by Status
-        </h2>
-        <p class="section-subtitle">Overview of task distribution</p>
-      </div>
-      
-      <div class="tasks-grid">
-        <div class="task-status-card task-pending">
-          <div class="task-status-header">
-            <div class="status-icon-wrapper">
-              <span class="status-icon">⏳</span>
-            </div>
-            <div class="status-info">
-              <h4>Pending</h4>
-              <div class="status-value">{{ stats.tasksByStatus.Pending }}</div>
-            </div>
-          </div>
-          <div class="status-bar">
-            <div class="status-bar-fill" [style.width.%]="getTaskPercentage('Pending')"></div>
-          </div>
-          <p class="status-percentage">{{ getTaskPercentage('Pending') }}%</p>
-        </div>
-        
-        <div class="task-status-card task-in-progress">
-          <div class="task-status-header">
-            <div class="status-icon-wrapper">
-              <span class="status-icon">🔄</span>
-            </div>
-            <div class="status-info">
-              <h4>In Progress</h4>
-              <div class="status-value">{{ stats.tasksByStatus['In Progress'] }}</div>
-            </div>
-          </div>
-          <div class="status-bar">
-            <div class="status-bar-fill" [style.width.%]="getTaskPercentage('In Progress')"></div>
-          </div>
-          <p class="status-percentage">{{ getTaskPercentage('In Progress') }}%</p>
-        </div>
-        
-        <div class="task-status-card task-completed">
-          <div class="task-status-header">
-            <div class="status-icon-wrapper">
-              <span class="status-icon">✅</span>
-            </div>
-            <div class="status-info">
-              <h4>Completed</h4>
-              <div class="status-value">{{ stats.tasksByStatus.Completed }}</div>
-            </div>
-          </div>
-          <div class="status-bar">
-            <div class="status-bar-fill" [style.width.%]="getTaskPercentage('Completed')"></div>
-          </div>
-          <p class="status-percentage">{{ getTaskPercentage('Completed') }}%</p>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Projects by Client Section -->
-    <div class="clients-section">
-      <div class="section-header">
-        <h2>
-          <span class="section-icon">🏢</span>
-          Projects by Client
-        </h2>
-        <p class="section-subtitle">Client project distribution</p>
-      </div>
-      
-      <div class="clients-grid">
-        <div *ngFor="let client of getClientKeys(); let i = index" class="client-card" [style.animation-delay]="i * 0.1 + 's'">
-          <div class="client-icon">
-            <span>{{ getClientIcon(i) }}</span>
-          </div>
-          <div class="client-content">
-            <h4>{{ client }}</h4>
-            <div class="client-stat">
-              <span class="client-count">{{ stats.projectsByClient[client] }}</span>
-              <span class="client-label">project{{ stats.projectsByClient[client] !== 1 ? 's' : '' }}</span>
-            </div>
-          </div>
-          <div class="client-progress">
-            <div class="client-progress-bar" [style.width.%]="getClientPercentage(client)"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Summary Card -->
-    <div class="summary-card">
-      <div class="summary-header">
-        <h3>
-          <span class="summary-icon">📈</span>
-          Quick Summary
-        </h3>
-      </div>
-      <div class="summary-content">
-        <div class="summary-item">
-          <span class="summary-label">Total Tasks:</span>
-          <span class="summary-value">{{ getTotalTasks() }}</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Completion Rate:</span>
-          <span class="summary-value highlight">{{ getCompletionRate() }}%</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Active Clients:</span>
-          <span class="summary-value">{{ getClientKeys().length }}</span>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

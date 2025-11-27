@@ -1,41 +1,98 @@
 <div class="task-management-container">
-  <h1>Task Management</h1>
+  <div class="page-header">
+    <div class="header-content">
+      <h1>
+        <span class="icon">✅</span>
+        Task Management
+      </h1>
+    </div>
+    <div class="header-stats">
+      <div class="stat-box">
+        <div *ngIf="loading" class="stat-skeleton">
+          <div class="skeleton-value"></div>
+          <div class="skeleton-label"></div>
+        </div>
+        <div *ngIf="!loading">
+          <span class="stat-value">{{ tasks.length }}</span>
+          <span class="stat-label">Total Tasks</span>
+        </div>
+      </div>
+    </div>
+  </div>
   
   <div class="filters-section">
-    <div class="filter-group">
-      <label for="statusFilter">Filter by Status:</label>
-      <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusFilterChange()">
-        <option value="">All Statuses</option>
-        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
-      </select>
+    <div class="filters-header">
+      <h3>🔍 Filters</h3>
     </div>
-    
-    <div class="filter-group">
-      <label for="employeeFilter">Filter by Employee:</label>
-      <select id="employeeFilter" [(ngModel)]="employeeFilter" (change)="onEmployeeFilterChange()">
-        <option [value]="null">All Employees</option>
-        <option *ngFor="let emp of allEmployees" [value]="emp.id">{{ emp.name }}</option>
-      </select>
+    <div class="filters-content">
+      <div class="filter-group">
+        <label for="statusFilter">
+          <span class="label-icon">📊</span>
+          Filter by Status
+        </label>
+        <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onStatusFilterChange()" class="filter-select">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="employeeFilter">
+          <span class="label-icon">👤</span>
+          Filter by Employee
+        </label>
+        <select id="employeeFilter" [(ngModel)]="employeeFilter" (change)="onEmployeeFilterChange()" class="filter-select">
+          <option [ngValue]="null">All Employees</option>
+          <option *ngFor="let emp of allEmployees" [ngValue]="emp.id">{{ emp.name }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="dueDateFilter">
+          <span class="label-icon">📅</span>
+          Filter by Due Date
+        </label>
+        <input 
+          type="date" 
+          id="dueDateFilter" 
+          [(ngModel)]="dueDateFilter" 
+          (change)="onDueDateFilterChange()"
+          class="filter-select" />
+      </div>
+      
+      <button class="clear-filters-btn" (click)="clearFilters()" *ngIf="statusFilter || (employeeFilter !== null && employeeFilter !== undefined) || dueDateFilter">
+        Clear Filters
+      </button>
     </div>
-    
-    <div class="filter-group">
-      <label for="dueDateFilter">Filter by Due Date:</label>
-      <input 
-        type="date" 
-        id="dueDateFilter" 
-        [(ngModel)]="dueDateFilter" 
-        (change)="onDueDateFilterChange()" />
-    </div>
-    
-    <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
   </div>
   
   <div class="tasks-section">
-    <h2>Tasks ({{ filteredTasks.length }})</h2>
-    <div *ngIf="filteredTasks.length === 0" class="no-tasks">
-      <p>No tasks found matching the filters.</p>
+    <div class="section-header">
+      <h2>
+        <span class="section-icon">📋</span>
+        Tasks
+        <span class="count-badge">{{ filteredTasks.length }}</span>
+      </h2>
     </div>
-    <div *ngIf="filteredTasks.length > 0" class="tasks-grid">
+    
+    <div *ngIf="loading" class="tasks-grid-skeleton">
+      <div class="task-card-skeleton" *ngFor="let i of [1,2,3,4,5,6]">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line long"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </div>
+    
+    <div *ngIf="!loading && filteredTasks.length === 0" class="no-tasks">
+      <div class="empty-icon">🔍</div>
+      <p class="empty-message">No tasks found matching the filters.</p>
+      <button class="empty-action" (click)="clearFilters()" *ngIf="statusFilter || (employeeFilter !== null && employeeFilter !== undefined) || dueDateFilter">
+        Clear Filters
+      </button>
+    </div>
+    <div *ngIf="!loading && filteredTasks.length > 0" class="tasks-grid">
       <div *ngFor="let task of filteredTasks" class="task-card">
         <div class="task-header">
           <h3>{{ task.name }}</h3>

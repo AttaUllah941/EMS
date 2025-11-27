@@ -39,6 +39,7 @@
     .header-stats {
       display: flex;
       gap: 20px;
+      align-items: center;
       
       .stat-box {
         background: rgba(255, 255, 255, 0.2);
@@ -47,6 +48,28 @@
         padding: 20px 30px;
         text-align: center;
         min-width: 120px;
+        
+        .stat-skeleton {
+          .skeleton-value {
+            height: 32px;
+            width: 60px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.2) 75%);
+            background-size: 200% 100%;
+            border-radius: 4px;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            margin: 0 auto 8px;
+          }
+          
+          .skeleton-label {
+            height: 14px;
+            width: 100px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.2) 75%);
+            background-size: 200% 100%;
+            border-radius: 4px;
+            animation: skeleton-loading 1.5s ease-in-out infinite;
+            margin: 0 auto;
+          }
+        }
         
         .stat-value {
           display: block;
@@ -59,6 +82,38 @@
           display: block;
           font-size: 14px;
           opacity: 0.9;
+        }
+      }
+      
+      .reset-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 12px 24px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        
+        .reset-icon {
+          font-size: 16px;
+        }
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+          border-color: rgba(255, 255, 255, 0.5);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        &:active {
+          transform: translateY(0);
         }
       }
     }
@@ -290,6 +345,62 @@
         
         .card-indicator {
           display: block;
+        }
+      }
+      
+      &.skeleton-card {
+        cursor: default;
+        pointer-events: none;
+        
+        &:hover {
+          transform: none;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          border-color: transparent;
+        }
+        
+        .skeleton-avatar {
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+        
+        .skeleton-name {
+          height: 20px;
+          width: 150px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          border-radius: 4px;
+          animation: skeleton-loading 1.5s ease-in-out infinite;
+          margin-bottom: 12px;
+        }
+        
+        .skeleton-badge {
+          height: 24px;
+          width: 50px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          border-radius: 12px;
+          animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+        
+        .skeleton-detail {
+          height: 16px;
+          width: 200px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          border-radius: 4px;
+          animation: skeleton-loading 1.5s ease-in-out infinite;
+          margin-bottom: 8px;
+          
+          &:nth-child(2) {
+            width: 180px;
+            animation-delay: 0.1s;
+          }
+          
+          &:nth-child(3) {
+            width: 160px;
+            animation-delay: 0.2s;
+          }
         }
       }
       
@@ -574,6 +685,59 @@
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
+        &.skeleton-project-card {
+          pointer-events: none;
+          
+          &:hover {
+            transform: none;
+          }
+          
+          .skeleton-project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            
+            .skeleton-project-title {
+              height: 20px;
+              width: 180px;
+              background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+              background-size: 200% 100%;
+              border-radius: 4px;
+              animation: skeleton-loading 1.5s ease-in-out infinite;
+            }
+            
+            .skeleton-status-badge {
+              height: 24px;
+              width: 80px;
+              background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+              background-size: 200% 100%;
+              border-radius: 12px;
+              animation: skeleton-loading 1.5s ease-in-out infinite;
+            }
+          }
+          
+          .skeleton-project-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            
+            .skeleton-project-detail {
+              height: 16px;
+              width: 220px;
+              background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+              background-size: 200% 100%;
+              border-radius: 4px;
+              animation: skeleton-loading 1.5s ease-in-out infinite;
+              
+              &:nth-child(2) {
+                width: 200px;
+                animation-delay: 0.1s;
+              }
+            }
+          }
+        }
+        
         .project-header {
           display: flex;
           justify-content: space-between;
@@ -682,5 +846,14 @@
   50% {
     opacity: 0.7;
     transform: scale(1.1);
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }

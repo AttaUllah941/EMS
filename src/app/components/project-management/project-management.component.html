@@ -5,16 +5,17 @@
         <span class="icon">📁</span>
         Project Management
       </h1>
-      <p class="subtitle">Manage projects, assign employees, and track project tasks</p>
     </div>
     <div class="header-stats">
       <div class="stat-box">
-        <span class="stat-value">{{ projects.length }}</span>
-        <span class="stat-label">Total Projects</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-value">{{ filteredProjects.length }}</span>
-        <span class="stat-label">Filtered</span>
+        <div *ngIf="loading" class="stat-skeleton">
+          <div class="skeleton-value"></div>
+          <div class="skeleton-label"></div>
+        </div>
+        <div *ngIf="!loading">
+          <span class="stat-value">{{ projects.length }}</span>
+          <span class="stat-label">Total Projects</span>
+        </div>
       </div>
     </div>
   </div>
@@ -62,7 +63,19 @@
         </h2>
       </div>
       
-      <div *ngIf="filteredProjects.length === 0" class="empty-state">
+      <div *ngIf="loading" class="project-list-skeleton">
+        <div class="project-card-skeleton" *ngFor="let i of [1,2,3,4,5,6]">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line long"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!loading && filteredProjects.length === 0" class="empty-state">
         <div class="empty-icon">🔍</div>
         <p class="empty-message">No projects found matching your filters</p>
         <button class="empty-action" (click)="clearFilters()" *ngIf="statusFilter || clientFilter">
@@ -70,7 +83,7 @@
         </button>
       </div>
       
-      <div class="project-list" *ngIf="filteredProjects.length > 0">
+      <div class="project-list" *ngIf="!loading && filteredProjects.length > 0">
         <div 
           *ngFor="let project of filteredProjects" 
           class="project-card"
@@ -214,12 +227,20 @@
           </h3>
         </div>
         
-        <div *ngIf="selectedProjectTasks.length === 0" class="no-items">
+        <div *ngIf="tasksLoading" class="tasks-list-skeleton">
+          <div class="task-item-skeleton" *ngFor="let i of [1,2,3]">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        </div>
+        
+        <div *ngIf="!tasksLoading && selectedProjectTasks.length === 0" class="no-items">
           <div class="empty-icon-small">📝</div>
           <p>No tasks for this project.</p>
         </div>
         
-        <div *ngIf="selectedProjectTasks.length > 0" class="tasks-list">
+        <div *ngIf="!tasksLoading && selectedProjectTasks.length > 0" class="tasks-list">
           <div *ngFor="let task of selectedProjectTasks" class="task-item">
             <div class="task-header">
               <h4>{{ task.name }}</h4>

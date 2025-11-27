@@ -23,6 +23,9 @@ export class ProjectManagementComponent implements OnInit {
   allEmployees: Employee[] = [];
   availableEmployees: Employee[] = [];
   
+  loading = true;
+  tasksLoading = false;
+  
   statusFilter: string = '';
   clientFilter: string = '';
   
@@ -41,15 +44,20 @@ export class ProjectManagementComponent implements OnInit {
   }
 
   loadProjects(): void {
+    this.loading = true;
     this.projectService.getProjects().subscribe({
       next: (projects) => {
         this.projects = projects;
         this.filteredProjects = projects;
         this.extractUniqueClients();
         this.applyFilters();
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       },
       error: (error) => {
         console.error('Error loading projects:', error);
+        this.loading = false;
       }
     });
   }
@@ -70,6 +78,11 @@ export class ProjectManagementComponent implements OnInit {
   }
 
   applyFilters(): void {
+    if (!this.projects || this.projects.length === 0) {
+      this.filteredProjects = [];
+      return;
+    }
+    
     this.filteredProjects = this.projects.filter(proj => {
       const statusMatch = !this.statusFilter || proj.status === this.statusFilter;
       const clientMatch = !this.clientFilter || proj.client === this.clientFilter;
@@ -92,12 +105,17 @@ export class ProjectManagementComponent implements OnInit {
   }
 
   loadProjectTasks(project: Project): void {
+    this.tasksLoading = true;
     this.taskService.getTasksByProjectId(project.id).subscribe({
       next: (tasks) => {
         this.selectedProjectTasks = tasks;
+        setTimeout(() => {
+          this.tasksLoading = false;
+        }, 500);
       },
       error: (error) => {
         console.error('Error loading project tasks:', error);
+        this.tasksLoading = false;
       }
     });
   }

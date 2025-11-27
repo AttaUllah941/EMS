@@ -19,6 +19,9 @@ export class EmployeeManagementComponent implements OnInit {
   selectedEmployee: Employee | null = null;
   selectedEmployeeProjects: Project[] = [];
   
+  loading = true;
+  projectsLoading = false;
+  
   roleFilter: string = '';
   departmentFilter: string = '';
   
@@ -35,15 +38,21 @@ export class EmployeeManagementComponent implements OnInit {
   }
 
   loadEmployees(): void {
+    this.loading = true;
     this.employeeService.getEmployees().subscribe({
       next: (employees) => {
         this.employees = employees;
         this.filteredEmployees = employees;
         this.extractUniqueValues();
         this.applyFilters();
+        // Simulate loading time for better UX
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       },
       error: (error) => {
         console.error('Error loading employees:', error);
+        this.loading = false;
       }
     });
   }
@@ -54,6 +63,11 @@ export class EmployeeManagementComponent implements OnInit {
   }
 
   applyFilters(): void {
+    if (!this.employees || this.employees.length === 0) {
+      this.filteredEmployees = [];
+      return;
+    }
+    
     this.filteredEmployees = this.employees.filter(emp => {
       const roleMatch = !this.roleFilter || emp.role === this.roleFilter;
       const departmentMatch = !this.departmentFilter || emp.department === this.departmentFilter;
@@ -75,14 +89,19 @@ export class EmployeeManagementComponent implements OnInit {
   }
 
   loadEmployeeProjects(employee: Employee): void {
+    this.projectsLoading = true;
     this.projectService.getProjects().subscribe({
       next: (projects) => {
         this.selectedEmployeeProjects = projects.filter(proj => 
           employee.projectIds.includes(proj.id)
         );
+        setTimeout(() => {
+          this.projectsLoading = false;
+        }, 500);
       },
       error: (error) => {
         console.error('Error loading employee projects:', error);
+        this.projectsLoading = false;
       }
     });
   }

@@ -5,17 +5,19 @@
         <span class="icon">👥</span>
         Employee Management
       </h1>
-      <p class="subtitle">Manage and view employee information and their project assignments</p>
     </div>
     <div class="header-stats">
       <div class="stat-box">
-        <span class="stat-value">{{ employees.length }}</span>
-        <span class="stat-label">Total Employees</span>
+        <div *ngIf="loading" class="stat-skeleton">
+          <div class="skeleton-value"></div>
+          <div class="skeleton-label"></div>
+        </div>
+        <div *ngIf="!loading">
+          <span class="stat-value">{{ employees.length }}</span>
+          <span class="stat-label">Total Employees</span>
+        </div>
       </div>
-      <div class="stat-box">
-        <span class="stat-value">{{ filteredEmployees.length }}</span>
-        <span class="stat-label">Filtered</span>
-      </div>
+     
     </div>
   </div>
   
@@ -62,7 +64,26 @@
         </h2>
       </div>
       
-      <div *ngIf="filteredEmployees.length === 0" class="empty-state">
+      <div *ngIf="loading" class="employee-list">
+        <div *ngFor="let i of [1,2,3,4,5,6]" class="employee-card skeleton-card">
+          <div class="card-avatar">
+            <div class="avatar-circle skeleton-avatar"></div>
+          </div>
+          <div class="card-content">
+            <div class="employee-header">
+              <div class="skeleton-name"></div>
+              <div class="skeleton-badge"></div>
+            </div>
+            <div class="employee-details">
+              <div class="skeleton-detail"></div>
+              <div class="skeleton-detail"></div>
+              <div class="skeleton-detail"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!loading && filteredEmployees.length === 0" class="empty-state">
         <div class="empty-icon">🔍</div>
         <p class="empty-message">No employees found matching your filters</p>
         <button class="empty-action" (click)="clearFilters()" *ngIf="roleFilter || departmentFilter">
@@ -70,7 +91,7 @@
         </button>
       </div>
       
-      <div class="employee-list" *ngIf="filteredEmployees.length > 0">
+      <div class="employee-list" *ngIf="!loading && filteredEmployees.length > 0">
         <div 
           *ngFor="let employee of filteredEmployees" 
           class="employee-card"
@@ -145,12 +166,25 @@
           <span class="count-badge">{{ selectedEmployeeProjects.length }}</span>
         </h3>
         
-        <div *ngIf="selectedEmployeeProjects.length === 0" class="no-projects">
+        <div *ngIf="projectsLoading" class="projects-list">
+          <div *ngFor="let i of [1,2,3]" class="project-card skeleton-project-card">
+            <div class="skeleton-project-header">
+              <div class="skeleton-project-title"></div>
+              <div class="skeleton-status-badge"></div>
+            </div>
+            <div class="skeleton-project-details">
+              <div class="skeleton-project-detail"></div>
+              <div class="skeleton-project-detail"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="!projectsLoading && selectedEmployeeProjects.length === 0" class="no-projects">
           <div class="empty-icon-small">📭</div>
           <p>No projects assigned to this employee.</p>
         </div>
         
-        <div *ngIf="selectedEmployeeProjects.length > 0" class="projects-list">
+        <div *ngIf="!projectsLoading && selectedEmployeeProjects.length > 0" class="projects-list">
           <div *ngFor="let project of selectedEmployeeProjects" class="project-card">
             <div class="project-header">
               <h4>{{ project.name }}</h4>

@@ -21,9 +21,5 @@ export const routes: Routes = [
   {
     path: 'tasks',
     loadComponent: () => import('./components/task-management/task-management.component').then(m => m.TaskManagementComponent)
-  },
-  {
-    path: 'js-executor',
-    loadComponent: () => import('./components/js-executor/js-executor.component').then(m => m.JsExecutorComponent)
   }
 ];

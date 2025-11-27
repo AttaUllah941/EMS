@@ -1,6 +1,6 @@
 # Employee & Project Management Dashboard
 
-A fully functional Angular 19 application for managing employees, projects, tasks, and executing custom JavaScript functions.
+A fully functional Angular 19 application for managing employees, projects, and tasks.
 
 ## Features
 
@@ -28,14 +28,6 @@ A fully functional Angular 19 application for managing employees, projects, task
 - Tasks per Status (Pending, In Progress, Completed)
 - Projects per Client breakdown
 
-### 5. Custom JS Executor
-- Four text areas for writing JavaScript functions
-- Execute button to run functions sequentially
-- Functions execute one by one, waiting for each to complete (including async functions)
-- Graceful error handling for failed functions
-- Display results for each function execution
-- Show execution time for each function
-
 ## Folder Structure
 
 ```
@@ -59,10 +51,6 @@ angular-task/
 │   │   │   │   ├── task-management.component.ts
 │   │   │   │   ├── task-management.component.html
 │   │   │   │   └── task-management.component.scss
-│   │   │   └── js-executor/
-│   │   │       ├── js-executor.component.ts
-│   │   │       ├── js-executor.component.html
-│   │   │       └── js-executor.component.scss
 │   │   ├── models/
 │   │   │   ├── employee.model.ts
 │   │   │   ├── project.model.ts
@@ -116,9 +104,7 @@ The application uses **in-memory mock data** stored in services. All services im
 
 3. **Task Assignment**: Tasks are assigned to employees via `assignedEmployeeId`. A task can be unassigned (null).
 
-4. **JS Executor Security**: The JS Executor uses `eval()` for execution. In a production environment, this should be replaced with a sandboxed execution environment or server-side execution for security reasons.
-
-5. **Status Values**:
+4. **Status Values**:
    - Project Status: 'Active', 'On Hold', 'Completed'
    - Task Status: 'Pending', 'In Progress', 'Completed'
 
@@ -158,34 +144,6 @@ ng build
 2. **Employees**: Browse employees, filter by role/department, and view their projects
 3. **Projects**: Manage projects, assign employees, and view project tasks
 4. **Tasks**: View and update task statuses, filter by various criteria
-5. **JS Executor**: Write and execute JavaScript functions sequentially
-
-## JS Executor Examples
-
-The JS Executor supports both synchronous and asynchronous functions:
-
-**Simple Return:**
-```javascript
-return 'Hello World';
-```
-
-**Async Function:**
-```javascript
-await new Promise(resolve => setTimeout(resolve, 1000));
-return 'Done after 1 second';
-```
-
-**Data Transformation:**
-```javascript
-const data = [1, 2, 3, 4, 5];
-return data.map(x => x * 2);
-```
-
-**Complex Calculation:**
-```javascript
-const sum = Array.from({length: 100}, (_, i) => i + 1).reduce((a, b) => a + b, 0);
-return sum;
-```
 
 ## Technologies Used
 
@@ -200,6 +158,5 @@ return sum;
 
 - The application is fully functional with mock data
 - All features are implemented as per requirements
-- The JS Executor handles both sync and async functions sequentially
 - Error handling is implemented throughout the application
 - Responsive design for mobile and desktop views

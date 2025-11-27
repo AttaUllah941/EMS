@@ -21,6 +21,8 @@ export class TaskManagementComponent implements OnInit {
   allEmployees: Employee[] = [];
   allProjects: Project[] = [];
   
+  loading = true;
+  
   statusFilter: string = '';
   employeeFilter: number | null = null;
   dueDateFilter: string = '';
@@ -40,14 +42,19 @@ export class TaskManagementComponent implements OnInit {
   }
 
   loadTasks(): void {
+    this.loading = true;
     this.taskService.getTasks().subscribe({
       next: (tasks) => {
         this.tasks = tasks;
         this.filteredTasks = tasks;
         this.applyFilters();
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       },
       error: (error) => {
         console.error('Error loading tasks:', error);
+        this.loading = false;
       }
     });
   }
@@ -75,10 +82,22 @@ export class TaskManagementComponent implements OnInit {
   }
 
   applyFilters(): void {
+    if (!this.tasks || this.tasks.length === 0) {
+      this.filteredTasks = [];
+      return;
+    }
+    
     this.filteredTasks = this.tasks.filter(task => {
+      // Status filter
       const statusMatch = !this.statusFilter || task.status === this.statusFilter;
-      const employeeMatch = !this.employeeFilter || task.assignedEmployeeId === this.employeeFilter;
+      
+      // Employee filter
+      const employeeMatch = this.employeeFilter === null || 
+                           task.assignedEmployeeId === this.employeeFilter;
+      
+      // Due date filter
       const dueDateMatch = !this.dueDateFilter || task.dueDate === this.dueDateFilter;
+      
       return statusMatch && employeeMatch && dueDateMatch;
     });
   }
@@ -88,6 +107,10 @@ export class TaskManagementComponent implements OnInit {
   }
 
   onEmployeeFilterChange(): void {
+    // Ensure null is properly set if needed (ngValue handles type conversion)
+    if (this.employeeFilter === undefined) {
+      this.employeeFilter = null;
+    }
     this.applyFilters();
   }
 
