@@ -8,6 +8,7 @@ import { TaskService } from '../../services/task.service';
 import { combineLatest, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import * as echarts from 'echarts';
+import type { ECharts, EChartsOption } from 'echarts';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,10 +38,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('projectsChart') projectsChartRef!: ElementRef;
   @ViewChild('tasksChart') tasksChartRef!: ElementRef;
 
-  private mainChart: echarts.ECharts | null = null;
-  private employeesChart: echarts.ECharts | null = null;
-  private projectsChart: echarts.ECharts | null = null;
-  private tasksChart: echarts.ECharts | null = null;
+  private mainChart: ECharts | null = null;
+  private employeesChart: ECharts | null = null;
+  private projectsChart: ECharts | null = null;
+  private tasksChart: ECharts | null = null;
 
   constructor(
     private dashboardService: DashboardService,
@@ -173,7 +174,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     
     const xAxisData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     
-    const option: echarts.EChartsOption = {
+    const option: EChartsOption = {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -299,7 +300,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     // Define different colors for each bar
     const barColors = ['#667eea', '#f093fb', '#4caf50', '#ff9800', '#2196f3', '#9c27b0', '#00bcd4', '#ff5722'];
 
-    const option: echarts.EChartsOption = {
+    const option: EChartsOption = {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -367,7 +368,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     const statusNames = ['Active', 'On Hold', 'Completed'];
     const statusCounts = statusNames.map(status => (projectsByStatus[status] || []).length);
 
-    const option: echarts.EChartsOption = {
+    const option: EChartsOption = {
       
       tooltip: {
         trigger: 'axis',
@@ -438,7 +439,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       stats.tasksByStatus.Completed
     ];
 
-    const option: echarts.EChartsOption = {
+    const option: EChartsOption = {
      
       tooltip: {
         trigger: 'axis',
