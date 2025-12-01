@@ -113,6 +113,7 @@
             <h3 *ngIf="!employeesChartLoading">
               <span class="chart-icon">👥</span>
               Employees 
+              <span class="count-badge" *ngIf="stats">{{ stats.totalEmployees }}</span>
             </h3>
           </div>
           <div class="chart-container">
@@ -137,6 +138,7 @@
             <h3 *ngIf="!projectsChartLoading">
               <span class="chart-icon">📁</span>
               Projects 
+              <span class="count-badge" *ngIf="stats">{{ stats.totalProjects }}</span>
             </h3>
           </div>
           <div class="chart-container">
@@ -161,6 +163,7 @@
             <h3 *ngIf="!tasksChartLoading">
               <span class="chart-icon">✅</span>
               Tasks 
+              <span class="count-badge" *ngIf="stats">{{ getTotalTasks() }}</span>
             </h3>
           </div>
           <div class="chart-container">

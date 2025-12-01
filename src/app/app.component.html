@@ -5,9 +5,24 @@
     </div>
     <ul class="nav-links">
       <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-      <li><a routerLink="/employees" routerLinkActive="active">Employees</a></li>
-      <li><a routerLink="/projects" routerLinkActive="active">Projects</a></li>
-      <li><a routerLink="/tasks" routerLinkActive="active">Tasks</a></li>
+      <li>
+        <a routerLink="/employees" routerLinkActive="active">
+          Employees
+          <span class="nav-badge" *ngIf="!loading">{{ employeeCount }}</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/projects" routerLinkActive="active">
+          Projects
+          <span class="nav-badge" *ngIf="!loading">{{ projectCount }}</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/tasks" routerLinkActive="active">
+          Tasks
+          <span class="nav-badge" *ngIf="!loading">{{ taskCount }}</span>
+        </a>
+      </li>
     </ul>
   </nav>
   

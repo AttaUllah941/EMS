@@ -1,3 +1,25 @@
+// CSS Variables for maintainability
+:root {
+  --badge-default-bg: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  --badge-active-bg: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+  --badge-default-shadow: 0 2px 8px rgba(255, 107, 107, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.1);
+  --badge-active-shadow: 0 2px 8px rgba(78, 205, 196, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.2);
+  --badge-hover-scale: 1.15;
+  --badge-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Mixins for reusable styles
+@mixin badge-hover-state($type: default) {
+  animation-play-state: paused;
+  transform: scale(var(--badge-hover-scale)) translateY(-1px);
+  
+  @if $type == active {
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.3);
+  } @else {
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.2);
+  }
+}
+
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -13,12 +35,10 @@
   justify-content: space-between;
   align-items: center;
   
-  .nav-brand {
-    h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
-    }
+  .nav-brand h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
   }
   
   .nav-links {
@@ -28,23 +48,61 @@
     padding: 0;
     gap: 20px;
     
-    li {
-      a {
+    li a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .nav-badge {
+        background: var(--badge-default-bg);
         color: white;
-        text-decoration: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        transition: background 0.3s ease;
-        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-size: 11px;
+        font-weight: 700;
+        min-width: 24px;
+        line-height: 1.4;
+        box-shadow: var(--badge-default-shadow);
+        transition: var(--badge-transition);
+        animation: badgePulse 2s ease-in-out infinite;
+        position: relative;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         
-        &:hover {
-          background: rgba(255, 255, 255, 0.1);
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 16px;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+          pointer-events: none;
+        }
+      }
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        .nav-badge { @include badge-hover-state; }
+      }
+      
+      &.active {
+        background: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+        
+        .nav-badge {
+          background: var(--badge-active-bg);
+          box-shadow: var(--badge-active-shadow);
+          animation: badgeGlow 2s ease-in-out infinite;
         }
         
-        &.active {
-          background: rgba(255, 255, 255, 0.2);
-          font-weight: 600;
-        }
+        &:hover .nav-badge { @include badge-hover-state(active); }
       }
     }
   }
@@ -52,11 +110,7 @@
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 15px;
-    
-    .nav-links {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .nav-links { flex-wrap: wrap; justify-content: center; }
   }
 }
 
@@ -64,5 +118,16 @@
   flex: 1;
   background: #f5f5f5;
   min-height: calc(100vh - 80px);
+}
+
+// Animations
+@keyframes badgePulse {
+  0%, 100% { box-shadow: var(--badge-default-shadow); }
+  50% { box-shadow: 0 3px 10px rgba(255, 107, 107, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.15); }
+}
+
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: var(--badge-active-shadow); }
+  50% { box-shadow: 0 3px 12px rgba(78, 205, 196, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.3); }
 }
 
